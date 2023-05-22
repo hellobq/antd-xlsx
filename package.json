@@ -17,5 +17,11 @@
   "dependencies": {
     "xlsx": "0.18.5",
     "xlsx-style-vite": "0.0.2"
-  }
+  },
+  "files": [
+    "index.js",
+    "utils.js",
+    "package.json",
+    "README.md"
+  ]
 }
