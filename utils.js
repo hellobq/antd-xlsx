@@ -1,21 +1,31 @@
 import { utils } from 'xlsx-style-vite'
 
 // 获取所有 sheets
-export function getSheets(sheets) {
+export function getSheets({
+  sheets,
+  hiddenHeader
+}) {
   return sheets.reduce((map, { columns, dataSource, name }) => {
-    const rootHeight = getRootHeight(columns)
+    // 不隐藏表头时，要计算表头树的深度和表头合并情况
+    let rootHeight = 0, headerMerges = []
+    if (!hiddenHeader) {
+      rootHeight = getRootHeight(columns)
+      headerMerges = getMerges({
+        columns,
+        rootHeight
+      })
+    }
+
     const leafColumns = getAllLeafColumns(columns)
-    const headerMerges = getMerges({
-      columns,
-      rootHeight
-    })
     const bodyMerges = getBodyMerges({
+      hiddenHeader,
       rootHeight,
       leafColumns,
       dataSource
     })
 
     let data = getDataFromColumnsAndDataSource({
+      hiddenHeader,
       columns,
       leafColumns,
       rootHeight,
@@ -123,37 +133,42 @@ function getRootHeight(columns) {
     ]
  */
 const getDataFromColumnsAndDataSource = ({
+  hiddenHeader,
   columns,
   leafColumns,
   rootHeight,
   dataSource
 }) => {
-  // 根据 s/e 计算表头文字所应该处的正确位置
-  const title_src = {}
-  const flat = children => {
-    children.forEach(column => {
-      const { title, s, e, children } = column
-      title_src[`${s.r}-${s.c}`] = title
-      children && flat(children)
-    })
-  }
-  flat(columns)
-  // console.log('title_src ...', title_src)
-
-  // 根据合并项计算表头数据格式
   const mergedHeaderDatas = []
-  for (let i = 0; i < rootHeight; ++i) {
-    const mergedHeaderData = []
-    for (let j = 0; j < leafColumns.length; ++j) {
-      mergedHeaderData.push(
-        title_src[`${i}-${j}`] || null
+
+  // 不隐藏表头时，计算表头数据
+  if (!hiddenHeader) {
+    // 根据 s/e 计算表头文字所应该处的正确位置
+    const title_src = {}
+    const flat = children => {
+      children.forEach(column => {
+        const { title, s, e, children } = column
+        title_src[`${s.r}-${s.c}`] = title
+        children && flat(children)
+      })
+    }
+    flat(columns)
+    // console.log('title_src ...', title_src)
+  
+    // 根据合并项计算表头数据格式
+    for (let i = 0; i < rootHeight; ++i) {
+      const mergedHeaderData = []
+      for (let j = 0; j < leafColumns.length; ++j) {
+        mergedHeaderData.push(
+          title_src[`${i}-${j}`] || null
+        )
+      }
+      mergedHeaderDatas.push(
+        mergedHeaderData
       )
     }
-    mergedHeaderDatas.push(
-      mergedHeaderData
-    )
+    // console.log('mergedHeaderDatas ...', mergedHeaderDatas)
   }
-  // console.log('mergedHeaderDatas ...', mergedHeaderDatas)
 
   const bodyData = dataSource.reduce((arr, item) => {
     arr.push(
@@ -207,12 +222,13 @@ function getMerges({ columns, rootHeight }) {
 
 // 表格体，merge 同一列的相同数据
 function getBodyMerges({
+  hiddenHeader,
   rootHeight,
   leafColumns,
   dataSource
 }) {
   const bodyMerges = []
-  leafColumns.map(({ dataIndex, s, e, merge }) => {
+  leafColumns.map(({ dataIndex, s, e, merge }, columnIndex) => {
     for (let i = 0; i < dataSource.length;) {
       let value = dataSource[i][dataIndex]
       if (merge) {
@@ -229,11 +245,11 @@ function getBodyMerges({
           bodyMerges.push({
             s: {
               r: rootHeight + i,
-              c: s.c
+              c: hiddenHeader ? columnIndex : s.c
             },
             e: {
               r: rootHeight + i + sameRows,
-              c: s.c
+              c: hiddenHeader ? columnIndex : s.c
             }
           })
           i += sameRows

@@ -129,7 +129,8 @@ function App() {
 
     antdXlsx({
       sheets,
-      filename: 'output.xlsx'
+      filename: 'output.xlsx',
+      hiddenHeader: true
     })
   }
 
