@@ -10,7 +10,7 @@ export function getSheets({
     let rootHeight = 0, headerMerges = []
     if (!hiddenHeader) {
       rootHeight = getRootHeight(columns)
-      headerMerges = getMerges({
+      headerMerges = getHeaderMerges({
         columns,
         rootHeight
       })
@@ -207,7 +207,7 @@ const getCols = (leafColumns) => {
 }
 
 // 获取所有表头合并项
-function getMerges({ columns, rootHeight }) {
+function getHeaderMerges({ columns, rootHeight }) {
   getWidthOfNode(columns)
   getHeightOfNode(columns)
 
@@ -217,6 +217,11 @@ function getMerges({ columns, rootHeight }) {
     rootHeight,
     merges
   })
+  getColSpanMerges({
+    columns,
+    merges
+  })
+  // console.log('columns ....', merges, columns)
   return merges
 }
 
@@ -321,6 +326,7 @@ function getCellMerges({
     }
     merges.push(
       {
+        title: column.title,
         s: {
           r: sr,
           c: sc
@@ -341,6 +347,58 @@ function getCellMerges({
         p_sr: column.s.r + 1
       })
     }
+  })
+}
+
+/**
+ * 表头列合并
+ * 注：表头只支持列合并，使用 column 里的 colSpan 进行设置。
+ */
+function getColSpanMerges({
+  columns,
+  merges
+}) {
+  columns.forEach((column, i) => {
+    let targetColSpans = column.colSpan - 1 // 该列打算合并兄弟列数
+    if (targetColSpans > 0) {
+      let mergeItem = merges.find(({ title }) => title === column.title)
+
+      let er, ec
+      // 判断合并数是否超出当前同层 columns 宽度
+      //    未超出，则使用第 i + targetColSpans 兄弟节点的 e 
+      //    超出，则使用最后一个兄弟节点的 e
+      if (i + targetColSpans < columns.length) {
+        er = Math.max(column.e.r, columns[i + targetColSpans].e.r)
+        ec = columns[i + targetColSpans].e.c
+      } else {
+        er = Math.max(column.e.r, columns[columns.length - 1].e.r)
+        ec = columns[columns.length - 1].e.c
+      }
+      column.e = mergeItem.e = {
+        r: er,
+        c: ec
+      }
+
+      // 如果子节点的合并项在祖先节点的合并项之内，则删除子节点的合并项
+      for (let i = merges.length - 1; i; --i) {
+        if (
+          merges[i].s.r >= column.s.r && 
+          merges[i].s.c >= column.s.c && 
+          merges[i].e.r <= column.e.r && 
+          merges[i].e.c <= column.e.c
+        ) {
+          merges.splice(i, 1)
+        }
+      }
+
+      // 因为上一步把目标 mergeItem 从 merges 也删除了，在此加回来
+      merges.push(mergeItem)
+    }
+
+    column.children && getColSpanMerges({
+      columns: column.children,
+      merges
+    })
   })
 }
 

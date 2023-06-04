@@ -31,7 +31,7 @@ const columns1 = [
             width: 150,
           },
           {
-            title: 'Door No.',
+            title: 'Block',
             dataIndex: 'number',
             children: [
               {
@@ -93,6 +93,7 @@ const columns2 = [
     title: 'Gender',
     dataIndex: 'gender',
     width: 80,
+    colSpan: 0,
   },
 ]
 
@@ -129,8 +130,7 @@ function App() {
 
     antdXlsx({
       sheets,
-      filename: 'output.xlsx',
-      hiddenHeader: true
+      filename: 'output.xlsx'
     })
   }
 
