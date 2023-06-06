@@ -5,7 +5,9 @@ export function getSheets({
   sheets,
   hiddenHeader
 }) {
-  return sheets.reduce((map, { columns, dataSource, name }) => {
+  return sheets.reduce((map, { columns: originColumns, dataSource, name }) => {
+    const columns = excludeNotExportColumns(originColumns)
+
     // 不隐藏表头时，要计算表头树的深度和表头合并情况
     let rootHeight = 0, headerMerges = []
     if (!hiddenHeader) {
@@ -101,6 +103,50 @@ function getAllLeafColumns(columns) {
   }
   loop(columns)
   return allColumns
+}
+
+/**
+ * 排除所有 notExport: true 的列
+ */
+function excludeNotExportColumns(columns) {
+  const node2leafs = {}
+
+  // 统计每个节点包含的所有非 notExport 叶子节点
+  function loop(columns) {
+    columns.forEach((item) => {
+      node2leafs[item.title] = calculateLeafOfNode(item)
+      if (item.children) {
+        loop(item.children)
+      }
+    })
+  }
+  loop(columns)
+
+  function calculateLeafOfNode(node) {
+    if (node.notExport) return []
+    return node.children
+      ? node.children.reduce((arr, item) => {
+          return arr.concat(calculateLeafOfNode(item))
+        }, [])
+      : [node]
+  }
+
+  // 依赖 node2leafs，生成 columns
+  const newColumns = []
+  function resetChildren(columns, newColumns) {
+    columns.forEach(({ children, ...resProps }) => {
+      if (node2leafs[resProps.title].length) {
+        newColumns.push(resProps)
+      }
+      if (children) {
+        resProps.children = []
+        resetChildren(children, resProps.children)
+      }
+    })
+  }
+  resetChildren(columns, newColumns)
+
+  return newColumns
 }
 
 // 计算整棵树的高度

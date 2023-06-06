@@ -21,6 +21,7 @@ const columns1 = [
         title: 'Age',
         dataIndex: 'age',
         width: 150,
+        notExport: true,
       },
       {
         title: 'Address',
@@ -38,11 +39,13 @@ const columns1 = [
                 title: 'Building',
                 dataIndex: 'building',
                 width: 100,
+                notExport: true,
               },
               {
                 title: 'Door No.',
                 dataIndex: 'number',
                 width: 100,
+                notExport: true,
               },
             ],
           },
@@ -76,7 +79,7 @@ const columns2 = [
   {
     title: '序号',
     dataIndex: 'key',
-    width: 50
+    width: 50,
   },
   {
     title: 'Name',
@@ -94,6 +97,7 @@ const columns2 = [
     dataIndex: 'gender',
     width: 80,
     colSpan: 0,
+    notExport: true,
   },
 ]
 
