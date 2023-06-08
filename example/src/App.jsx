@@ -30,6 +30,20 @@ const columns1 = [
             title: 'Street',
             dataIndex: 'street',
             width: 150,
+            onCell: (record, index) => {
+              if (index === 1) {
+                return {
+                  rowSpan: 8,
+                };
+              }
+              if (index === 10) {
+                return {
+                  rowSpan: 2,
+                  colSpan: 4,
+                };
+              }
+              return {};
+            },
           },
           {
             title: 'Block',

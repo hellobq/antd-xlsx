@@ -271,7 +271,7 @@ function getHeaderMerges({ columns, rootHeight }) {
   return merges
 }
 
-// 表格体，merge 同一列的相同数据
+// 表格合并
 function getBodyMerges({
   hiddenHeader,
   rootHeight,
@@ -279,7 +279,9 @@ function getBodyMerges({
   dataSource
 }) {
   const bodyMerges = []
-  leafColumns.map(({ dataIndex, s, e, merge }, columnIndex) => {
+  leafColumns.map(({ dataIndex, s, e, merge, onCell }, columnIndex) => {
+
+    // 同一列合并
     for (let i = 0; i < dataSource.length;) {
       let value = dataSource[i][dataIndex]
       if (merge) {
@@ -311,7 +313,46 @@ function getBodyMerges({
         i++
       }
     }
+    
+    // 局部单元格合并
+    for (let i = 0; i < dataSource.length; i++) {
+      let value = dataSource[i][dataIndex]
+      if (typeof onCell === 'function') {
+        const { rowSpan, colSpan } = onCell(value, i)
+
+        if (rowSpan) {
+          // 表格内部行合并
+
+          bodyMerges.push({
+            s: {
+              r: rootHeight + i,
+              c: hiddenHeader ? columnIndex : s.c
+            },
+            e: {
+              r: rootHeight + i + rowSpan - 1,
+              c: hiddenHeader ? columnIndex : s.c
+            }
+          })
+        }
+        if (colSpan) {
+          // 表格内部列合并
+
+          bodyMerges.push({
+            s: {
+              r: rootHeight + i,
+              c: hiddenHeader ? columnIndex : s.c
+            },
+            e: {
+              r: rootHeight + i,
+              c: (hiddenHeader ? columnIndex : s.c) + colSpan - 1
+            }
+          })
+          console.log(1, bodyMerges)
+        }
+      }
+    }
   })
+
   // console.log('bodyMerges ...', bodyMerges)
   return bodyMerges
 }
