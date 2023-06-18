@@ -42,6 +42,12 @@ const columns1 = [
                   colSpan: 4,
                 };
               }
+              if (index === 11) {
+                return {
+                  rowSpan: 2,
+                  colSpan: 2,
+                };
+              }
               return {};
             },
           },
@@ -69,11 +75,13 @@ const columns1 = [
   },
   {
     title: 'Company',
+    colSpan: 2,
     children: [
       {
         title: 'Company Address',
         dataIndex: 'companyAddress',
         width: 200,
+        colSpan: 2,
       },
       {
         title: 'Company Name',

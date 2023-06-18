@@ -314,40 +314,43 @@ function getBodyMerges({
       }
     }
     
-    // 局部单元格合并
+    // 表格内部局部单元格合并
     for (let i = 0; i < dataSource.length; i++) {
       let value = dataSource[i][dataIndex]
       if (typeof onCell === 'function') {
         const { rowSpan, colSpan } = onCell(value, i)
 
         if (rowSpan) {
-          // 表格内部行合并
-
-          bodyMerges.push({
-            s: {
-              r: rootHeight + i,
-              c: hiddenHeader ? columnIndex : s.c
-            },
-            e: {
-              r: rootHeight + i + rowSpan - 1,
-              c: hiddenHeader ? columnIndex : s.c
+          // 行合并
+          overlapMerges({
+            merges: bodyMerges,
+            curMerge: {
+              s: {
+                r: rootHeight + i,
+                c: hiddenHeader ? columnIndex : s.c
+              },
+              e: {
+                r: rootHeight + i + rowSpan - 1,
+                c: hiddenHeader ? columnIndex : s.c
+              }
             }
           })
         }
         if (colSpan) {
-          // 表格内部列合并
-
-          bodyMerges.push({
-            s: {
-              r: rootHeight + i,
-              c: hiddenHeader ? columnIndex : s.c
-            },
-            e: {
-              r: rootHeight + i,
-              c: (hiddenHeader ? columnIndex : s.c) + colSpan - 1
+          // 列合并
+          overlapMerges({
+            merges: bodyMerges,
+            curMerge: {
+              s: {
+                r: rootHeight + i,
+                c: hiddenHeader ? columnIndex : s.c
+              },
+              e: {
+                r: rootHeight + i,
+                c: (hiddenHeader ? columnIndex : s.c) + colSpan - 1
+              }
             }
           })
-          console.log(1, bodyMerges)
         }
       }
     }
@@ -355,6 +358,43 @@ function getBodyMerges({
 
   // console.log('bodyMerges ...', bodyMerges)
   return bodyMerges
+}
+
+/**
+ * 判断 merges 内是否有与 curMerge 相同合并区间
+ *    如果有，则扩大已有区间
+ *    如果没，则把 curMerge 加入到 merges 内
+ */
+function overlapMerges({
+  merges,
+  curMerge
+}) {
+  let i = 0;
+  for (; i < merges.length; ++i) {
+    let merge = merges[i]
+    let noOverlap = 
+      merge.e.r < curMerge.s.r ||
+      merge.s.r > curMerge.e.r ||
+      merge.e.c < curMerge.s.c ||
+      merge.s.c > curMerge.e.c
+
+    if (!noOverlap) {
+      // 存在共同区间
+
+      merge.s = {
+        r: Math.min(merge.s.r, curMerge.s.r),
+        c: Math.min(merge.s.c, curMerge.s.c)
+      }
+      merge.e = {
+        r: Math.max(merge.e.r, curMerge.e.r),
+        c: Math.max(merge.e.c, curMerge.e.c)
+      }
+      return
+    }
+  }
+
+  // 不存在共同区间
+  merges.push(curMerge)
 }
 
 // 计算每个节点的宽度（子孙叶子节点个数）
@@ -449,6 +489,7 @@ function getColSpanMerges({
     let targetColSpans = column.colSpan - 1 // 该列打算合并兄弟列数
     if (targetColSpans > 0) {
       let mergeItem = merges.find(({ title }) => title === column.title)
+      if (!mergeItem) return
 
       let er, ec
       // 判断合并数是否超出当前同层 columns 宽度
