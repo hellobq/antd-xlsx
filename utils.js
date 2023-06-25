@@ -1,11 +1,17 @@
 import { utils } from 'xlsx-style-vite'
+import { getCellStyle } from './utils.style'
 
 // 获取所有 sheets
 export function getSheets({
   sheets,
   hiddenHeader
 }) {
-  return sheets.reduce((map, { columns: originColumns, dataSource, name }) => {
+  return sheets.reduce((map, { 
+    name,
+    columns: originColumns,
+    dataSource,
+    style
+  }) => {
     const columns = excludeNotExportColumns(originColumns)
 
     // 不隐藏表头时，要计算表头树的深度和表头合并情况
@@ -35,39 +41,23 @@ export function getSheets({
     })
     let cols = getCols(leafColumns)
 
-    let tmp_data = {}, isTitle = false, border = getCellBorders()
+    let tmp_data = {}, isTitle = false
     data.forEach((value, r) => {
       value.forEach((v, c) => {
         isTitle = r < rootHeight && c < leafColumns.length // 对表头做单独样式处理
-
         let cell_text = utils.encode_cell({ r, c })
 
-        const s = {
-          font: {
-            sz: 12,
-            bold: isTitle,
-          },
-          alignment: {
-            vertical: 'center',
-            horizontal: isTitle ? 'center' : 'left',
-            wrapText: true
-          },
-          border
-        }
-
         tmp_data[cell_text] = {
-          v: typeof v === 'string' ? v.trim() : v,
-          s: isTitle
-            ? {
-              ...s,
-              fill: {
-                fgColor: {
-                  rgb: 'dddddd'
-                }
-              },
-            }
-            : s,
-          t: typeof v === 'number' || typeof v === 'string' && v.includes('%') ? 'n' : 's',
+          v: typeof v === 'string' 
+            ? v.trim() 
+            : v,
+          s: getCellStyle({ 
+            isTitle,
+            style
+          }),
+          t: typeof v === 'number' || typeof v === 'string' && v.includes('%') 
+            ? 'n' 
+            : 's',
         }
 
         // https://segmentfault.com/a/1190000022772664
@@ -528,20 +518,6 @@ function getColSpanMerges({
       merges
     })
   })
-}
-
-/**
- * 返回表格边框 sides: ['top', 'bottom' ...]
- */
-function getCellBorders() {
-  const sides = ['top', 'bottom', 'left', 'right']
-  return sides.reduce((obj, side) => {
-    obj[side] = {
-      style: 'thin',
-      color: { rgb: 'black' },
-    }
-    return obj
-  }, {})
 }
 
 

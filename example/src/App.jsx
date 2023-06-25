@@ -145,7 +145,14 @@ function App() {
       {
         name: '普通表格',
         columns: columns2,
-        dataSource
+        dataSource,
+        style: {
+          header: {
+            fontSize: 10,
+            background: 'ffc0cb',
+            borderColor: 'ffc0cb'
+          }
+        }
       },
       {
         name: '表头分组',
