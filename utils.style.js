@@ -16,10 +16,33 @@ export function getCellStyle({
     border: getCellBorders()
   }
 
-  isTitle && setHeaderStyle({
-    s,
-    style
-  })
+  if (!style) {
+    style = {
+      header: {},
+      body: {}
+    }
+  } else {
+    if (!style.header) style.header = {}
+    if (!style.body) style.body = {}
+  }
+
+  isTitle 
+    ? setStyle({
+        s,
+        style: style.header,
+        defaultStyle: {
+          bold: true,
+          backgroundColor: 'dddddd',
+          textAlign: 'center'
+        }
+      })
+    : setStyle({
+        s,
+        style: style.body,
+        defaultStyle: {
+          textAlign: 'left'
+        }
+      })
   return s
 }
 
@@ -38,28 +61,24 @@ function getCellBorders() {
 
 /**
  * 根据 style，改变 s 部分属性的引用值
- *        s: 每个单元格样式
- *    style: 用户设置的 style 字面量
+ *               s: 每个单元格样式
+*            style: 用户设置的 style 字面量
+ *    defaultStyle: 默认样式
  */
-function setHeaderStyle({
+function setStyle({
   s,      
   style,
+  defaultStyle
 }) {
-  if (!style) {
-    style = {
-      header: {}
-    }
-  }
-
   const {
     fontSize, 
     color, 
-    bold = true,
+    bold = defaultStyle.style,
     background,
-    backgroundColor = 'dddddd', 
-    textAlign = 'center',
+    backgroundColor = defaultStyle.backgroundColor,
+    textAlign = defaultStyle.textAlign,
     borderColor
-  } = style.header
+  } = style
 
   s.font = {
     sz: fontSize,

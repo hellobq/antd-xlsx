@@ -148,16 +148,31 @@ function App() {
         dataSource,
         style: {
           header: {
-            fontSize: 10,
+            bold: false,
+            backgroundColor: 'ff0000',
+            textAlign: 'left'
+          },
+          body: {
+            fontSize: 12,
             background: 'ffc0cb',
-            borderColor: 'ffc0cb'
+            borderColor: 'ff0000'
           }
         }
       },
       {
         name: '表头分组',
         columns: columns1,
-        dataSource
+        dataSource,
+        style: {
+          header: {
+            fontSize: 10,
+            background: 'ffc0cb',
+          },
+          body: {
+            fontSize: 12,
+            borderColor: 'ff0000'
+          }
+        }
       }
     ]
 
