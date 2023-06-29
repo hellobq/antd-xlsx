@@ -1,6 +1,6 @@
 {
   "name": "antd-xlsx",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "基于 antd Table 组件的 columns 和 dataSource 参数，导出 Excel 文件",
   "main": "index.js",
   "scripts": {
