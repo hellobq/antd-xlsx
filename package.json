@@ -1,10 +1,12 @@
 {
   "name": "antd-xlsx",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "基于 antd Table 组件的 columns 和 dataSource 参数，导出 Excel 文件",
-  "main": "index.js",
+  "main": "dist/antd-xlsx.js",
+  "module": "dist/antd-xlsx.esm.js",
   "scripts": {
-    "dev": "cd example && npm run dev"
+    "dev": "cd example && npm run dev",
+    "build": "microbundle --entry index.js --output dist --sourcemap false --compress false --format esm,cjs"
   },
   "keywords": [
     "antd",
@@ -19,8 +21,9 @@
     "xlsx-style-vite": "0.0.2"
   },
   "files": [
-    "index.js",
-    "utils.js",
-    "utils.style.js"
-  ]
+    "dist"
+  ],
+  "devDependencies": {
+    "microbundle": "0.14.0"
+  }
 }

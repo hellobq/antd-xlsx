@@ -4,13 +4,14 @@ import { getCellStyle } from './utils.style'
 // 获取所有 sheets
 export function getSheets({
   sheets,
-  hiddenHeader
+  hiddenHeader: outHiddenHeader
 }) {
   return sheets.reduce((map, { 
     name,
     columns: originColumns,
     dataSource,
-    style
+    style,
+    hiddenHeader = outHiddenHeader
   }) => {
     const columns = excludeNotExportColumns(originColumns)
 

@@ -146,6 +146,7 @@ function App() {
         name: '普通表格',
         columns: columns2,
         dataSource,
+        hiddenHeader: false,
         style: {
           header: {
             bold: false,
@@ -178,7 +179,8 @@ function App() {
 
     antdXlsx({
       sheets,
-      filename: 'output.xlsx'
+      filename: 'output.xlsx',
+      hiddenHeader: true,
     })
   }
 
