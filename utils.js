@@ -207,9 +207,13 @@ const getDataFromColumnsAndDataSource = ({
     // console.log('mergedHeaderDatas ...', mergedHeaderDatas)
   }
 
-  const bodyData = dataSource.reduce((arr, item) => {
+  const bodyData = dataSource.reduce((arr, item, i) => {
     arr.push(
-      leafColumns.map(({ dataIndex }) => item[dataIndex])
+      leafColumns.map(({ dataIndex, render }) => {
+        return typeof render === 'function' 
+          ? render(item[dataIndex], item, i) 
+          : item[dataIndex]
+      })
     )
     return arr
   }, [])
@@ -307,9 +311,8 @@ function getBodyMerges({
     
     // 表格内部局部单元格合并
     for (let i = 0; i < dataSource.length; i++) {
-      let value = dataSource[i][dataIndex]
       if (typeof onCell === 'function') {
-        const { rowSpan, colSpan } = onCell(value, i)
+        const { rowSpan, colSpan } = onCell(dataSource[i], i)
 
         if (rowSpan) {
           // 行合并

@@ -59,7 +59,10 @@ const columns1 = [
                 title: 'Building',
                 dataIndex: 'building',
                 width: 100,
-                notExport: true,
+                render: (val, row, i) => {
+                  console.log(val, row, i)
+                  return val
+                }
               },
               {
                 title: 'Door No.',
@@ -180,7 +183,7 @@ function App() {
     antdXlsx({
       sheets,
       filename: 'output.xlsx',
-      hiddenHeader: true,
+      // hiddenHeader: true,
     })
   }
 
