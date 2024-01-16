@@ -1,5 +1,5 @@
 import React from 'react'
-import antdXlsx from 'antd-xlsx'
+import { nostyleDown } from 'antd-xlsx'
 import './App.css'
 
 const columns1 = [
@@ -180,10 +180,16 @@ function App() {
       }
     ]
 
-    antdXlsx({
+    // antdXlsx({
+    //   sheets,
+    //   filename: 'output.xlsx',
+    //   // hiddenHeader: true,
+    // })
+
+    nostyleDown({
       sheets,
       filename: 'output.xlsx',
-      // hiddenHeader: true,
+      hiddenHeader: true,
     })
   }
 

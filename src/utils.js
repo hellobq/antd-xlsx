@@ -1,10 +1,10 @@
-import { utils } from 'xlsx-style-vite'
-import { getCellStyle } from './utils.style'
+import { utils } from 'xlsx'
 
 // 获取所有 sheets
 export function getSheets({
   sheets,
-  hiddenHeader: outHiddenHeader
+  hiddenHeader: outHiddenHeader,
+  getCellStyle,
 }) {
   return sheets.reduce((map, { 
     name,
@@ -52,10 +52,12 @@ export function getSheets({
           v: typeof v === 'string' 
             ? v.trim() 
             : v,
-          s: getCellStyle({ 
-            isTitle,
-            style
-          }),
+          s: typeof getCellStyle === 'function' 
+            ? getCellStyle({ 
+                isTitle,
+                style
+              })
+            : undefined,
           t: typeof v === 'number' || typeof v === 'string' && v.includes('%') 
             ? 'n' 
             : 's',
