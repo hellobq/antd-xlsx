@@ -1,5 +1,5 @@
 import React from 'react'
-import { nostyleDown } from 'antd-xlsx'
+import { nostyle } from 'antd-xlsx'
 import './App.css'
 
 const columns1 = [
@@ -186,7 +186,7 @@ function App() {
     //   // hiddenHeader: true,
     // })
 
-    nostyleDown({
+    nostyle({
       sheets,
       filename: 'output.xlsx',
       hiddenHeader: true,

@@ -5,7 +5,7 @@
   "main": "dist/cjs",
   "module": "dist/esm",
   "scripts": {
-    "dev": "cd example && npm run dev",
+    "dev": "cd example-vite2 && npm run dev",
     "build-modern": "microbundle src/style.js src/nostyle.js -o dist/esm --compress true -f modern",
     "build-cjs": "microbundle src/style.js src/nostyle.js -o dist/cjs --compress true -f cjs",
     "cp-entries": "cpy src/esm.js dist/esm --rename=index.js --flat && cpy src/cjs.js dist/cjs --rename=index.js --flat",
