@@ -1,7 +1,6 @@
 import React from 'react'
 import { nostyle } from 'antd-xlsx'
 
-
 const columns1 = [
   {
     title: '序号',
@@ -126,7 +125,7 @@ const columns2 = [
   },
 ]
 
-export default  function App() {
+export default function App() {
   const onCountBtnClick = () => {
     const dataSource = []
     for (let i = 0; i < 100; i++) {
@@ -188,8 +187,11 @@ export default  function App() {
   }
 
   return (
-    <button type="button" onClick={onCountBtnClick}>
-      下载 excel
-    </button>
+    <p>
+      隐藏表头：
+      <button onClick={onCountBtnClick}>
+        hidden header
+      </button>
+    </p>
   )
 }

@@ -1,6 +1,5 @@
 import React from 'react'
-import { nostyle } from 'antd-xlsx'
-
+import style from 'antd-xlsx'
 
 const columns1 = [
   {
@@ -21,7 +20,6 @@ const columns1 = [
         title: 'Age',
         dataIndex: 'age',
         width: 150,
-        notExport: true,
       },
       {
         title: 'Address',
@@ -58,17 +56,12 @@ const columns1 = [
               {
                 title: 'Building',
                 dataIndex: 'building',
-                width: 100,
-                render: (val, row, i) => {
-                  console.log(val, row, i)
-                  return val
-                }
+                width: 100
               },
               {
                 title: 'Door No.',
                 dataIndex: 'number',
                 width: 100,
-                notExport: true,
               },
             ],
           },
@@ -78,7 +71,6 @@ const columns1 = [
   },
   {
     title: 'Company',
-    colSpan: 2,
     children: [
       {
         title: 'Company Address',
@@ -126,7 +118,7 @@ const columns2 = [
   },
 ]
 
-export default  function App() {
+export default function App() {
   const onCountBtnClick = () => {
     const dataSource = []
     for (let i = 0; i < 100; i++) {
@@ -149,7 +141,6 @@ export default  function App() {
         name: '普通表格',
         columns: columns2,
         dataSource,
-        hiddenHeader: false,
         style: {
           header: {
             bold: false,
@@ -169,27 +160,35 @@ export default  function App() {
         dataSource,
         style: {
           header: {
-            fontSize: 10,
+            fontSize: 14,
+            color: '008000',
+            bold: true,
             background: 'ffc0cb',
+            borderColor: '008000',
+            textAlign: 'left'
           },
           body: {
             fontSize: 12,
-            borderColor: 'ff0000'
+            borderColor: 'ff0000',
+            background: '008000',
+            textAlign: 'center'
           }
         }
       }
     ]
 
-    nostyle({
+    style({
       sheets,
-      filename: 'output.xlsx',
-      hiddenHeader: true,
+      filename: 'output.xlsx'
     })
   }
 
   return (
-    <button type="button" onClick={onCountBtnClick}>
-      下载 excel
-    </button>
+    <p>
+      自定义样式：
+      <button onClick={onCountBtnClick}>
+        custom style
+      </button>
+    </p>
   )
 }
