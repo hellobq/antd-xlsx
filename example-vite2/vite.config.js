@@ -9,7 +9,7 @@ export default defineConfig(({ command, mode }) => {
     command === 'build' &&
     mode === 'pages'
   ) {
-    base = '/antx-xlsx/'
+    base = '/antd-xlsx/'
     outDir = 'dist-pages'
   }
 
