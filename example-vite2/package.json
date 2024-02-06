@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --port 9527",
-    "build": "vite build",
+    "build": "npm run build:normal && npm run build:pages",
+    "build:normal": "vite build",
+    "build:pages": "vite build --mode pages",
     "preview": "vite preview"
   },
   "dependencies": {
