@@ -9,7 +9,8 @@
     "build-modern": "microbundle src/style.js src/nostyle.js -o dist/esm --compress true -f modern",
     "build-cjs": "microbundle src/style.js src/nostyle.js -o dist/cjs --compress true -f cjs",
     "cp-entries": "cpy src/esm.js dist/esm --rename=index.js --flat && cpy src/cjs.js dist/cjs --rename=index.js --flat",
-    "build": "rimraf ./dist && npm run build-modern && npm run build-cjs && npm run cp-entries"
+    "build": "rimraf ./dist && npm run build-modern && npm run build-cjs && npm run cp-entries",
+    "gh-pages": "cpy example-vite2/dist/index.html docs --flat && cpy example-vite2/dist/assets docs/assets --flat"
   },
   "keywords": [
     "antd",
