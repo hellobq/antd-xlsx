@@ -1,4 +1,4 @@
-import { write } from 'xlsx-style-vite'
+import { write } from 'xlsx'
 import { getSheets, s2ab, saveAs } from './utils'
 
 export default ({

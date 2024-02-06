@@ -1,6 +1,5 @@
 import React from 'react'
-import antdXlsx from 'antd-xlsx'
-import './App.css'
+import { nostyle } from 'antd-xlsx'
 
 const columns1 = [
   {
@@ -34,21 +33,21 @@ const columns1 = [
               if (index === 1) {
                 return {
                   rowSpan: 8,
-                };
+                }
               }
               if (index === 10) {
                 return {
                   rowSpan: 2,
                   colSpan: 4,
-                };
+                }
               }
               if (index === 11) {
                 return {
                   rowSpan: 2,
                   colSpan: 2,
-                };
+                }
               }
-              return {};
+              return {}
             },
           },
           {
@@ -126,9 +125,9 @@ const columns2 = [
   },
 ]
 
-function App() {
+export default function App() {
   const onCountBtnClick = () => {
-    const dataSource = [];
+    const dataSource = []
     for (let i = 0; i < 100; i++) {
       dataSource.push({
         key: i + 1,
@@ -140,7 +139,7 @@ function App() {
         companyAddress: 'Lake Street 42 ',
         companyName: 'SoftLake Co',
         gender: 'M',
-      });
+      })
     }
     dataSource[43].name = 'Alick'
 
@@ -180,18 +179,19 @@ function App() {
       }
     ]
 
-    antdXlsx({
+    nostyle({
       sheets,
       filename: 'output.xlsx',
-      // hiddenHeader: true,
+      hiddenHeader: true,
     })
   }
 
   return (
-    <button type="button" onClick={onCountBtnClick}>
-      下载 excel
-    </button>
+    <p>
+      隐藏表头：
+      <button onClick={onCountBtnClick}>
+        hidden header
+      </button>
+    </p>
   )
 }
-
-export default App

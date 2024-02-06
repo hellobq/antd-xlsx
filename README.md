@@ -1,10 +1,11 @@
-### 介绍
-基于 [xlsx](https://github.com/SheetJS/sheetjs)、[xlsx-style-vite](https://www.npmjs.com/package/xlsx-style-vite) 导出 Excel
+### introduce
+Based on [xlsx]（ https://github.com/SheetJS/sheetjs ）[xlsx style vite]（ https://www.npmjs.com/package/xlsx-style-vite ）Export to Excel
 
-#### 安装
+#### install
 ``` bash
 npm install antd-xlsx
 ```
 
-#### 注意
-1. 数据格式参看 antd [Table](https://ant.design/components/table-cn/) 组件的 columns、dataSource 属性。或者查看 example
+#### notice
+1.The data format can be found in Antd [Table]（ https://ant.design/components/table-cn/ ）The columns and dataSource properties of the component. Or check the example
+

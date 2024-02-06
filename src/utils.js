@@ -1,10 +1,10 @@
-import { utils } from 'xlsx-style-vite'
-import { getCellStyle } from './utils.style'
+import { utils } from 'xlsx'
 
 // 获取所有 sheets
 export function getSheets({
   sheets,
-  hiddenHeader: outHiddenHeader
+  hiddenHeader: outHiddenHeader,
+  getCellStyle,
 }) {
   return sheets.reduce((map, { 
     name,
@@ -52,10 +52,12 @@ export function getSheets({
           v: typeof v === 'string' 
             ? v.trim() 
             : v,
-          s: getCellStyle({ 
-            isTitle,
-            style
-          }),
+          s: typeof getCellStyle === 'function' 
+            ? getCellStyle({ 
+                isTitle,
+                style
+              })
+            : undefined,
           t: typeof v === 'number' || typeof v === 'string' && v.includes('%') 
             ? 'n' 
             : 's',
@@ -240,11 +242,9 @@ function getSameRows({
   return count
 }
 
-// 获取列宽度（字符个数）
+// 获取列宽度 https://www.npmjs.com/package/xlsx#row-and-column-properties
 const getCols = (leafColumns) => {
-  const charWidth = 7.2; // 假设一个字符是 7.2px
-  const charNums = leafColumns.map(({ width = 120 }) => Math.floor(width / charWidth))
-  return charNums.map(wch => ({ wch }))
+  return leafColumns.map(({ width = 120 }) => ({ wpx: width }))
 }
 
 // 获取所有表头合并项

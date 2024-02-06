@@ -2,11 +2,14 @@
   "name": "antd-xlsx",
   "version": "1.3.3",
   "description": "基于 antd Table 组件的 columns 和 dataSource 参数，导出 Excel 文件",
-  "main": "dist/antd-xlsx.js",
-  "module": "dist/antd-xlsx.esm.js",
+  "main": "dist/cjs",
+  "module": "dist/esm",
   "scripts": {
-    "dev": "cd example && npm run dev",
-    "build": "microbundle --entry index.js --output dist --sourcemap false --compress false --format esm,cjs"
+    "dev": "cd example-vite2 && npm run dev",
+    "build-modern": "microbundle src/style.js src/nostyle.js -o dist/esm --compress true -f modern",
+    "build-cjs": "microbundle src/style.js src/nostyle.js -o dist/cjs --compress true -f cjs",
+    "cp-entries": "cpy src/esm.js dist/esm --rename=index.js --flat && cpy src/cjs.js dist/cjs --rename=index.js --flat",
+    "build": "rimraf ./dist && npm run build-modern && npm run build-cjs && npm run cp-entries"
   },
   "keywords": [
     "antd",
@@ -14,16 +17,30 @@
     "xlsx-style",
     "excel"
   ],
-  "author": "bq-web",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hellobq/antd-xlsx.git"
+  },
+  "author": "hellobq",
   "license": "MIT",
   "dependencies": {
     "xlsx": "0.18.5",
     "xlsx-style-vite": "0.0.2"
   },
+  "devDependencies": {
+    "cpy-cli": "4.1.0",
+    "microbundle": "0.14.0",
+    "rimraf": "4.4.1"
+  },
   "files": [
     "dist"
   ],
-  "devDependencies": {
-    "microbundle": "0.14.0"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=14"
   }
 }
