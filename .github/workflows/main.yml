@@ -1,16 +1,31 @@
-name: CI
+name: auto gh-pages
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Run a one-line script
-        run: echo Hello, world!
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '12.14.0'
+  
+    - name: Build Project example-vite2
+      run: |
+        cd example-vite2
+        npm install
+        npm run build
+
+    - name: Run gh-pages
+      run: |
+        cd ../
+        npm install
+        npm run gh-pages
