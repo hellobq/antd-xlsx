@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,13 @@ jobs:
         npm install
         npm run build
 
-    - name: Run gh-pages
+    - name: move gh-pages files
       run: |
         ls -a
         npm run gh-pages
+
+    - name: deploy gh-pages files
+      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      with:
+        folder: docs
+        branch: gh-pages
