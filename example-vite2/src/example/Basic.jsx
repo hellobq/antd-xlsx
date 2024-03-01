@@ -12,7 +12,7 @@ const columns = [
     dataIndex: 'name',
     width: 160,
     render: (val, row, i) => {
-      console.log(val, row, i)
+      // console.log(val, row, i)
       return 'formatted Name: ' + val
     }
   },
