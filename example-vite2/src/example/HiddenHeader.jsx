@@ -59,7 +59,7 @@ const columns1 = [
                 dataIndex: 'building',
                 width: 100,
                 render: (val, row, i) => {
-                  console.log(val, row, i)
+                  // console.log(val, row, i)
                   return val
                 }
               },
