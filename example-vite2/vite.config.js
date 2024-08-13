@@ -20,6 +20,7 @@ export default defineConfig(({ command, mode }) => {
       react()
     ],
     build: {
+      outDir,
       rollupOptions: {
         output: {
           manualChunks: (id) => {
