@@ -1,7 +1,6 @@
 import React from 'react'
 import { nostyle } from 'antd-xlsx'
 
-
 const columns1 = [
   {
     title: '序号',
