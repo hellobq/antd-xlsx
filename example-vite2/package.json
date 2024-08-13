@@ -7,6 +7,7 @@
     "build": "npm run build:normal && npm run build:pages",
     "build:normal": "vite build",
     "build:pages": "vite build --mode pages",
+    "analyze": "vite build --mode analyze",
     "preview": "vite preview"
   },
   "dependencies": {

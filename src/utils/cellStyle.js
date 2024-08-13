@@ -3,7 +3,8 @@
  *     isTitle: 是否是表头
  *       style: 用户设置的 style 字面量
  */
-export function getCellStyle({
+
+export default function getCellStyle({
   isTitle,
   style
 }) {

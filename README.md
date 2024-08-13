@@ -1,4 +1,4 @@
-# introduce
+## introduce
 Based on [xlsx](https://github.com/SheetJS/sheetjs) and [xlsx style vite](https://www.npmjs.com/package/xlsx-style-vite) Export to Excel
 
 ## install
@@ -6,5 +6,5 @@ Based on [xlsx](https://github.com/SheetJS/sheetjs) and [xlsx style vite](https:
 npm install antd-xlsx
 ```
 
-## notice
+### notice
 1.The data format can be found in Antd [Table](https://ant.design/components/table-cn/ ) The columns and dataSource properties of the component. Or check the example

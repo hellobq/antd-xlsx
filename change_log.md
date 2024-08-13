@@ -1,3 +1,13 @@
+### [1.4.1] - 2024-08-13
+#### Added
+- 支持在 Web Worker 内调用导出方法，注意：Worker 路径、onCell、render；
+- 暴露 saveAs 方法；
+
+#### Changed
+- 把工具函数统一放到 utils 内；
+- example-vite2 演示代码支持 Worker 示例；
+- example-vite2 支持 analyze，剥离 xlsx-style-vite 模块；
+
 ### [1.4.0] - 2024-03-01
 #### Added
 - 新增 nostyle 导出方法，使用其导出的表格不能设置样式，但可 tree-shaking 掉 xlsx-style-vite 包；

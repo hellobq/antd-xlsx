@@ -1,7 +1,7 @@
 import { utils } from 'xlsx'
 
 // 获取所有 sheets
-export function getSheets({
+export default function getSheets({
   sheets,
   hiddenHeader: outHiddenHeader,
   getCellStyle,
@@ -212,9 +212,19 @@ const getDataFromColumnsAndDataSource = ({
   const bodyData = dataSource.reduce((arr, item, i) => {
     arr.push(
       leafColumns.map(({ dataIndex, render }) => {
-        return typeof render === 'function' 
-          ? render(item[dataIndex], item, i) 
-          : item[dataIndex]
+        if (render) {
+          let onRenderFn = typeof render === 'function'
+            ? render
+            : new Function(
+                'value', 
+                'row', 
+                'rowIndex', 
+                `return (${render})(value, row, rowIndex)`
+              ) // in worker
+          return onRenderFn(item[dataIndex], item, i)
+        } else {
+          return item[dataIndex]
+        }
       })
     )
     return arr
@@ -311,8 +321,11 @@ function getBodyMerges({
     
     // 表格内部局部单元格合并
     for (let i = 0; i < dataSource.length; i++) {
-      if (typeof onCell === 'function') {
-        const { rowSpan, colSpan } = onCell(dataSource[i], i)
+      if (onCell) {
+        let onCellFn = typeof onCell === 'function'
+          ? onCell
+          : new Function('record', 'index', `return (${onCell})(record, index)`) // in worker 返回匿名函数自执行的结果
+        const { rowSpan, colSpan } = onCellFn(dataSource[i], i)
 
         if (rowSpan) {
           // 行合并
@@ -522,34 +535,4 @@ function getColSpanMerges({
       merges
     })
   })
-}
-
-
-/**
- * 将 string 转成 arrayBuffer
- * 
- * @param {string} s 
- * @returns {ArrayBuffer}
- */
-export function s2ab(s) {
-  const buf = new ArrayBuffer(s.length), view = new Uint8Array(buf)
-  for (let i = 0; i !== s.length; ++i) {
-    view[i] = s.charCodeAt(i) & 0xFF
-  }
-  return buf
-}
-
-/**
- * 保存文件
- * 
- * @param {Blob} obj 
- * @param {string} title 
- */
-export function saveAs(obj, title) {
-  var link = document.createElement('a')
-  link.download = title
-  link.href = URL.createObjectURL(obj)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(obj)
 }

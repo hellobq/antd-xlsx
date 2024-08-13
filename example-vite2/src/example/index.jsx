@@ -6,6 +6,7 @@ import HeaderGroup from './HeaderGroup'
 import Span from './Span'
 import CustomStyle from './CustomStyle'
 import HiddenHeader from './HiddenHeader'
+import UseWorker from './UseWorker'
 
 export default function Example() {
   return (
@@ -17,6 +18,7 @@ export default function Example() {
       <Span />
       <CustomStyle />
       <HiddenHeader />
+      <UseWorker />
     </>
   )
 }

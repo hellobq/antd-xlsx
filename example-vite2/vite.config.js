@@ -16,11 +16,19 @@ export default defineConfig(({ command, mode }) => {
   return {
     base,
     plugins: [
-      // bundleAnalyzer(),
+      ...(mode === 'analyze' ?[ bundleAnalyzer()] : []),
       react()
     ],
     build: {
-      outDir
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('xlsx-style-vite')) {
+              return 'xlsx-style-vite'
+            }
+          }
+        }
+      }
     },
     server: {
       host: true
