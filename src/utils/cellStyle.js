@@ -41,6 +41,7 @@ export default function getCellStyle({
         s,
         style: style.body,
         defaultStyle: {
+          backgroundColor: 'ffffff',
           textAlign: 'left'
         }
       })

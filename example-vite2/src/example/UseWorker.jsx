@@ -80,17 +80,19 @@ export default function App() {
       }
     ]
 
-    workerRef.current.postMessage({
-      type: 'blob',
-      params: {
-        sheets,
-        filename
-      }
-    })
+    if (workerRef.current) {
+      workerRef.current.postMessage({
+        type: 'blob',
+        params: {
+          sheets,
+          filename
+        }
+      })
+    }
   }
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
+    if ('Worker' in window) {
       const worker = new Worker(new URL('./worker.js', import.meta.url), {
         type: 'module'
       })
