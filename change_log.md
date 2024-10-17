@@ -1,3 +1,9 @@
+### [1.4.2] - 2024-10-17
+#### Changed
+- 增加类型校验；
+- example-vite2 演示代码支持 ts 代码示例；
+- 去除 example-webpack4 代码示例；
+
 ### [1.4.1] - 2024-08-13
 #### Added
 - 支持在 Web Worker 内调用导出方法，注意：Worker 路径、onCell、render；
