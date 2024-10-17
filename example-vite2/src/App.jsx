@@ -58,7 +58,7 @@ const columns1 = [
                 title: 'Building',
                 dataIndex: 'building',
                 width: 100,
-                render: (val, row, i) => {
+                render: (val) => {
                   // console.log(val, row, i)
                   return val
                 }

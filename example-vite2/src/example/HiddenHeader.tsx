@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import style from 'antd-xlsx'
+import React from 'react'
+import { ISheet, nostyle } from 'antd-xlsx'
 
-const columns = [
+const columns1 = [
   {
     title: '序号',
     dataIndex: 'key',
@@ -11,19 +11,7 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     width: 100,
-    onCell: (record, index) => {
-      if (index === 0) {
-        return {
-          rowSpan: 6,
-        }
-      }
-      if (index > 0 && index < 6) {
-        return {
-          rowSpan: 0,
-        }
-      }
-      return {}
-    },
+    merge: true,
   },
   {
     title: 'Other',
@@ -32,6 +20,7 @@ const columns = [
         title: 'Age',
         dataIndex: 'age',
         width: 150,
+        notExport: true,
       },
       {
         title: 'Address',
@@ -40,16 +29,22 @@ const columns = [
             title: 'Street',
             dataIndex: 'street',
             width: 150,
-            onCell: (record, index) => {
-              if (index === 6) {
+            onCell: (record: any, index: number) => {
+              if (index === 1) {
                 return {
-                  rowSpan: 2,
-                  colSpan: 2
+                  rowSpan: 8,
                 }
               }
-              if (index === 7) {
+              if (index === 10) {
                 return {
-                  rowSpan: 0
+                  rowSpan: 2,
+                  colSpan: 4,
+                }
+              }
+              if (index === 11) {
+                return {
+                  rowSpan: 2,
+                  colSpan: 2,
                 }
               }
               return {}
@@ -63,38 +58,16 @@ const columns = [
                 title: 'Building',
                 dataIndex: 'building',
                 width: 100,
-                onCell: (record, index) => {
-                  if (index === 1) {
-                    return {
-                      colSpan: 2,
-                    }
-                  }
-                  if (index === 6) {
-                    return {
-                      rowSpan: 0,
-                      colSpan: 0
-                    }
-                  }
-                  if (index === 7) {
-                    return {
-                      rowSpan: 0
-                    }
-                  }
-                  return {}
-                },
+                render: (val: any) => {
+                  // console.log(val, row, i)
+                  return val
+                }
               },
               {
                 title: 'Door No.',
                 dataIndex: 'number',
                 width: 100,
-                onCell: (record, index) => {
-                  if (index === 1) {
-                    return {
-                      colSpan: 0,
-                    }
-                  }
-                  return {}
-                },
+                notExport: true,
               },
             ],
           },
@@ -104,31 +77,18 @@ const columns = [
   },
   {
     title: 'Company',
+    colSpan: 2,
     children: [
       {
         title: 'Company Address',
         dataIndex: 'companyAddress',
         width: 200,
         colSpan: 2,
-        onCell: (record, index) => {
-          if (index === 7) {
-            return {
-              rowSpan: 3,
-            }
-          }
-          if (index > 7 && index < 10) {
-            return {
-              rowSpan: 0,
-            }
-          }
-          return {}
-        },
       },
       {
         title: 'Company Name',
         dataIndex: 'companyName',
         width: 200,
-        colSpan: 0,
       },
     ],
   },
@@ -136,14 +96,39 @@ const columns = [
     title: 'Gender',
     dataIndex: 'gender',
     width: 80,
-    merge: true
+  },
+]
+
+const columns2 = [
+  {
+    title: '序号',
+    dataIndex: 'key',
+    width: 50,
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    width: 100,
+    merge: true,
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    width: 150,
+  },
+  {
+    title: 'Gender',
+    dataIndex: 'gender',
+    width: 80,
+    colSpan: 0,
+    notExport: true,
   },
 ]
 
 export default function App() {
-  const [dataSource] = useState(() => {
+  const onCountBtnClick = () => {
     const dataSource = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       dataSource.push({
         key: i + 1,
         name: i > 40 ? 'John' : 'Jack',
@@ -156,29 +141,56 @@ export default function App() {
         gender: 'M',
       })
     }
-    return dataSource
-  })
+    dataSource[43].name = 'Alick'
 
-  const onCountBtnClick = () => {
-    const sheets = [
+    const sheets: ISheet[] = [
       {
         name: '普通表格',
-        columns: columns,
+        columns: columns2,
         dataSource,
+        hiddenHeader: false,
+        style: {
+          header: {
+            bold: false,
+            backgroundColor: 'ff0000',
+            textAlign: 'left'
+          },
+          body: {
+            fontSize: 12,
+            background: 'ffc0cb',
+            borderColor: 'ff0000'
+          }
+        }
+      },
+      {
+        name: '表头分组',
+        columns: columns1,
+        dataSource,
+        style: {
+          header: {
+            fontSize: 10,
+            background: 'ffc0cb',
+          },
+          body: {
+            fontSize: 12,
+            borderColor: 'ff0000'
+          }
+        }
       }
     ]
 
-    style({
+    nostyle({
       sheets,
-      filename: 'output.xlsx'
+      filename: 'output.xlsx',
+      hiddenHeader: true,
     })
   }
 
   return (
     <p>
-      单元格合并（表头列合并，表格行/列合并）：
+      隐藏表头：
       <button onClick={onCountBtnClick}>
-        cell span
+        hidden header
       </button>
     </p>
   )

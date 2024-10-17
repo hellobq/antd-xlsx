@@ -4,13 +4,16 @@
   "description": "Export an Excel file based on the columns and dataSource parameters of the antd Table component",
   "main": "dist/cjs",
   "module": "dist/esm",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "watch": "microbundle src/style.js src/nostyle.js -o dist/esm --compress true -f modern -w",
+    "build-modern": "microbundle src/style.ts src/nostyle.ts src/utils/saveAs.ts -o dist/esm/[name].js -f modern --tsconfig tsconfig.build.json ",
+    "build-cjs": "microbundle src/style.ts src/nostyle.ts src/utils/saveAs.ts -o dist/cjs/[name].js -f cjs --tsconfig tsconfig.build.json ",
+    "cp-entries": "cpy src/entries/entry-esm.js dist/esm --rename=index.js --flat && cpy src/entries/entry-cjs.js dist/cjs --rename=index.js --flat",
+    "build:types": "tsc",
+    "build:js": "npm run build-modern && npm run build-cjs && npm run cp-entries",
+    "build": "rimraf dist && npm run build:types && npm run build:js",
+    "watch": "microbundle src/style.ts src/nostyle.ts -o dist/esm -f modern -w",
     "dev": "cd example-vite2 && npm run dev",
-    "build-modern": "microbundle src/style.js src/nostyle.js src/utils/saveAs.js -o dist/esm/[name].js --compress true -f modern",
-    "build-cjs": "microbundle src/style.js src/nostyle.js src/utils/saveAs.js -o dist/cjs/[name].js --compress true -f cjs",
-    "cp-entries": "cpy src/entry-esm.js dist/esm --rename=index.js --flat && cpy src/entry-cjs.js dist/cjs --rename=index.js --flat",
-    "build": "rimraf dist && npm run build-modern && npm run build-cjs && npm run cp-entries",
     "gh-pages": "rimraf docs && cpy example-vite2/dist-pages/index.html docs --flat && cpy example-vite2/dist-pages/assets docs/assets --flat"
   },
   "keywords": [

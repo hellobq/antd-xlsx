@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client'
 import Example from './example'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const dom = document.getElementById('root') as HTMLElement
+
+ReactDOM.createRoot(dom).render(
   <React.StrictMode>
     <Example />
   </React.StrictMode>

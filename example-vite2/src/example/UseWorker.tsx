@@ -56,7 +56,7 @@ const columns = [
 const filename = 'basic.xlsx'
 
 export default function App() {
-  const workerRef = useRef()
+  const workerRef = useRef<Worker>()
   const [dataSource] = useState(() => {
     const dataSource = []
     for (let i = 0; i < 100; i++) {

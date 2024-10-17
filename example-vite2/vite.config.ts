@@ -16,7 +16,7 @@ export default defineConfig(({ command, mode }) => {
   return {
     base,
     plugins: [
-      ...(mode === 'analyze' ?[ bundleAnalyzer()] : []),
+      ...(mode === 'analyze' ?[ bundleAnalyzer({})] : []),
       react()
     ],
     build: {

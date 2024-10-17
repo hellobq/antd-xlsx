@@ -1,6 +1,5 @@
 import React from 'react'
-import antdXlsx from 'antd-xlsx'
-import './index.less'
+import style, { ISheet } from 'antd-xlsx'
 
 const columns1 = [
   {
@@ -21,7 +20,6 @@ const columns1 = [
         title: 'Age',
         dataIndex: 'age',
         width: 150,
-        notExport: true,
       },
       {
         title: 'Address',
@@ -30,7 +28,7 @@ const columns1 = [
             title: 'Street',
             dataIndex: 'street',
             width: 150,
-            onCell: (record, index) => {
+            onCell: (record: any, index: number) => {
               if (index === 1) {
                 return {
                   rowSpan: 8,
@@ -58,17 +56,12 @@ const columns1 = [
               {
                 title: 'Building',
                 dataIndex: 'building',
-                width: 100,
-                render: (val, row, i) => {
-                  console.log(val, row, i)
-                  return val
-                }
+                width: 100
               },
               {
                 title: 'Door No.',
                 dataIndex: 'number',
                 width: 100,
-                notExport: true,
               },
             ],
           },
@@ -78,7 +71,6 @@ const columns1 = [
   },
   {
     title: 'Company',
-    colSpan: 2,
     children: [
       {
         title: 'Company Address',
@@ -144,51 +136,33 @@ export default function App() {
     }
     dataSource[43].name = 'Alick'
 
-    const sheets = [
+    const sheets: ISheet[] = [
       {
         name: '普通表格',
         columns: columns2,
         dataSource,
-        hiddenHeader: false,
         style: {
           header: {
             bold: false,
             backgroundColor: 'ff0000',
             textAlign: 'left'
-          },
-          body: {
-            fontSize: 12,
-            background: 'ffc0cb',
-            borderColor: 'ff0000'
-          }
-        }
-      },
-      {
-        name: '表头分组',
-        columns: columns1,
-        dataSource,
-        style: {
-          header: {
-            fontSize: 10,
-            background: 'ffc0cb',
-          },
-          body: {
-            fontSize: 12,
-            borderColor: 'ff0000'
           }
         }
       }
     ]
 
-    antdXlsx({
+    style({
       sheets,
-      filename: 'output.xlsx',
+      filename: 'output.xlsx'
     })
   }
 
   return (
-    <button onClick={onCountBtnClick}>
-      下载 excel
-    </button>
+    <p>
+      自定义样式：
+      <button onClick={onCountBtnClick}>
+        custom style
+      </button>
+    </p>
   )
 }

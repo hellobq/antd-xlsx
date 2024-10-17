@@ -1,16 +1,24 @@
+import { 
+  getCellStyleType, 
+  styleType,
+  Side,
+  borderType,
+  ICellStyle,
+} from "../type"
+
 /**
  *  设置单元格样式
  *     isTitle: 是否是表头
  *       style: 用户设置的 style 字面量
  */
+const getCellStyle: getCellStyleType = cellStyle => {
+  let {
+    isTitle,
+    style
+  } = cellStyle
 
-export default function getCellStyle({
-  isTitle,
-  style
-}) {
-  const s = {
+  const s: styleType = {
     alignment: {
-      vertical: 'center',
       horizontal: 'left',
       wrapText: true
     },
@@ -52,13 +60,13 @@ export default function getCellStyle({
  * 返回表格边框 sides: ['top', 'bottom' ...]
  */
 function getCellBorders() {
-  const sides = ['top', 'bottom', 'left', 'right']
-  return sides.reduce((obj, side) => {
+  const sides: Side[] = ['top', 'bottom', 'left', 'right']
+  return sides.reduce((obj, side: Side) => {
     obj[side] = {
       style: 'thin'
     }
     return obj
-  }, {})
+  }, {} as borderType)
 }
 
 /**
@@ -71,11 +79,19 @@ function setStyle({
   s,      
   style,
   defaultStyle
+}: {
+  s: styleType,
+  style?: ICellStyle,
+  defaultStyle: ICellStyle & {
+    backgroundColor: string;
+    textAlign: 'left' | 'center' | 'right';
+  },
 }) {
+  if (!style) return
   const {
     fontSize, 
-    color, 
-    bold = defaultStyle.style,
+    color,    
+    bold = defaultStyle.bold,
     background,
     backgroundColor = defaultStyle.backgroundColor,
     textAlign = defaultStyle.textAlign,
@@ -98,8 +114,10 @@ function setStyle({
   }
 
   for (let side in s.border) {
-    s.border[side].color = {
+    s.border[side as Side].color = {
       rgb: borderColor
     }
   }
 }
+
+export default getCellStyle 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import style from 'antd-xlsx'
+import style, { ISheet } from 'antd-xlsx'
 
 const columns = [
   {
@@ -90,10 +90,10 @@ export default function App() {
   })
 
   const onCountBtnClick = () => {
-    const sheets = [
+    const sheets: ISheet[] = [
       {
         name: 'sheet',
-        columns: columns,
+        columns,
         dataSource
       }
     ]

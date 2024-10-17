@@ -11,7 +11,7 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     width: 160,
-    render: (val, row, i) => {
+    render: (val: any) => {
       // console.log(val, row, i)
       return 'formatted Name: ' + val
     }
