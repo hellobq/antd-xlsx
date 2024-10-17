@@ -1,6 +1,6 @@
 {
   "name": "antd-xlsx",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Export an Excel file based on the columns and dataSource parameters of the antd Table component",
   "main": "dist/cjs",
   "module": "dist/esm",
