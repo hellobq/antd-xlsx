@@ -181,7 +181,7 @@ export default function App() {
 
     nostyle({
       sheets,
-      filename: 'output.xlsx',
+      filename: 'hidden header.xlsx',
       hiddenHeader: true,
     })
   }

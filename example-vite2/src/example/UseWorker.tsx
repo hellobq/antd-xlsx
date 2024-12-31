@@ -15,7 +15,7 @@ const columns = [
     // in Worker 不能传函数
     render: `
       (val, row, i) => {
-        console.log(val, row, i)
+        // console.log(val, row, i)
         return 'formatted Name: ' + val
       }
     `
@@ -53,7 +53,7 @@ const columns = [
   },
 ]
 
-const filename = 'basic.xlsx'
+const filename = 'work in Worker.xlsx'
 
 export default function App() {
   const workerRef = useRef<Worker>()

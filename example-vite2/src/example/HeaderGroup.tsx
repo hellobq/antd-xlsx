@@ -92,7 +92,6 @@ export default function App() {
   const onCountBtnClick = () => {
     const sheets: ISheet[] = [
       {
-        name: 'sheet',
         columns,
         dataSource
       }
@@ -100,7 +99,7 @@ export default function App() {
 
     style({
       sheets,
-      filename: 'moreSheet.xlsx',
+      filename: 'header group.xlsx',
     })
   }
 

@@ -45,12 +45,10 @@ export default function App() {
   const onCountBtnClick = () => {
     const sheets = [
       {
-        name: 'sheet1',
         columns: columns,
         dataSource
       },
       {
-        name: 'sheet2',
         columns: columns,
         dataSource
       }
@@ -58,7 +56,7 @@ export default function App() {
 
     style({
       sheets,
-      filename: 'moreSheet.xlsx',
+      filename: 'more sheet.xlsx',
     })
   }
 

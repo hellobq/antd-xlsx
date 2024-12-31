@@ -2,47 +2,42 @@ import { WorkBook, WritingOptions } from 'xlsx'
 import getSheets from './sheets'
 import s2ab from './s2ab'
 import saveAs from './saveAs'
-import { IExcel, getCellStyleType } from '../type';
+import { IExcel, ISheet, ICellStyle } from '../type'
 
-function download(
-  args: IExcel & 
-  {
-    getCellStyle?: getCellStyleType;
-    write: (data: WorkBook, opts: WritingOptions) => any;
-  }
-): Blob | void {
+type DownloadParams = IExcel & {
+  setCellStyle?: ({ isTitle, style }: { isTitle: boolean, style?: ISheet['style'] }) => ICellStyle
+  write: (data: WorkBook, opts: WritingOptions) => any
+}
+
+export default function download(args: DownloadParams): Blob | void {
   const {
     sheets,
     filename = 'excel.xlsx',
     hiddenHeader,     
     worker,
-    getCellStyle,
+    setCellStyle,
     write,
   } = args
 
   const Sheets = getSheets({
     sheets,
     hiddenHeader,
-    getCellStyle,
+    setCellStyle,
   })
-
-  const wbout: string = write(
-    {
-      Sheets,
-      SheetNames: sheets.map(({ name }, index) => name || `sheet${index}`)
-    }, 
-    {
-      bookType: 'xlsx',
-      type: 'binary',
-    }
-  )
-
+  const workBook: WorkBook = {
+    Sheets,
+    SheetNames: sheets.map(({ name }, index) => name || `sheet${index + 1}`)
+  }
+  const writingOptions: WritingOptions = {
+    bookType: 'xlsx',
+    type: 'binary',
+  }
+  const wbout: string = write(workBook, writingOptions)
   const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
+
   if (worker) {
     return blob
   } else {
     saveAs(blob, filename)
   }
 }
-
-export default download

@@ -50,7 +50,6 @@ export default function App() {
   const onCountBtnClick = () => {
     const sheets = [
       {
-        name: 'sheet',
         columns: columns,
         dataSource
       }

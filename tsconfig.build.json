@@ -5,12 +5,10 @@
     "outDir": "dist",
     "target": "ES5",
     "module": "es2015",
-    "lib": ["dom", "ES5", "ES6"],
-
+    "lib": ["dom", "ES5"],
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedParameters": true
   },
   "include": [
     "types",

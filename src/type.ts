@@ -1,13 +1,45 @@
-export type IColumn = {
-  title: string;
-  width?: number;
-  notExport?: boolean;
-  children?: IColumn[];
-  render?: (value: any, row: Record<string, any>, rowIndex: number) => any | string;
-  onCell?: Function | string;
-  colSpan?: number;
+/**
+ * 主 Excel 配置接口
+ */
+export interface IExcel {
+  sheets: ISheet[];                   // 表格中的工作表列表
+  filename?: string;                  // 导出的文件名
+  hiddenHeader?: boolean;             // 是否隐藏所有工作表的表头
+  worker?: boolean;                   // 是否启用 Worker 多线程
+}
 
-  [key: string]: any;
+/**
+ * 工作表配置接口
+ */
+export interface ISheet {
+  name?: string;                      // 工作表名称
+  columns: IColumn[];                 // 列配置
+  dataSource: Record<string, any>[];  // 数据源
+  hiddenHeader?: boolean;             // 是否隐藏当前表的表头（优先级高于全局配置）
+  style?: ISheetStyle;                // 样式配置
+}
+
+/**
+ * 样式配置接口（表头和正文）
+ */
+export interface ISheetStyle {
+  header?: IStyleConfig;              // 表头样式配置
+  body?: IStyleConfig;                // 正文样式配置
+}
+
+/**
+ * 列配置接口
+ */
+export type IColumn = {
+  title: string;                      // 列标题
+  width?: number;                     // 列宽度
+  notExport?: boolean;                // 是否不导出该列
+  children?: IColumn[];               // 子列（支持分组表头）
+  render?: (value: any, row: Record<string, any>, rowIndex: number) => any | string; // 自定义单元格渲染
+  onCell?: Function | string;         // 单元格事件
+  colSpan?: number;                   // 合并列数
+  [key: string]: any;                 // 额外字段支持
+
   // dataIndex?: string;  表头分组 父 column 没 dataIndex
   // rootHeight?: number; 
   // leafCount?: number;
@@ -16,85 +48,68 @@ export type IColumn = {
   // merge?: IMerge;
 }
 
-export interface ICellStyle {
-  fontSize?: number;
-  color?: string;
-  bold?: boolean;
-  background?: string;
-  backgroundColor?: string;
-  textAlign?: 'left' | 'center' | 'right';
-  borderColor?: string;
+/**
+ * 单元格左上角位置坐标
+ */
+type Point = {
+  r: number;                          // 行索引
+  c: number;                          // 列索引
 }
 
-export interface ISheet {
-  name?: string;
-  columns: IColumn[];
-  dataSource: Record<string, any>[];
-  hiddenHeader?: boolean; // 导出表格时，是否隐藏表头。默认显示表头
-  style?: {
-    header?: ICellStyle;
-    body?: ICellStyle;
-  }
-}
-
-export interface IExcel {
-  sheets: ISheet[];
-  filename?: string;
-  hiddenHeader?: boolean; // 导出表格时，是否隐藏所有 sheet 表头
-  worker?: boolean;
-}
-
-// cell 左上角
-export type Point = {
-  r: number;
-  c: number;
-}
-
+/**
+ * 单元格合并信息
+ */
 export type IMerge = {
-  title?: string;
-  s: Point;
-  e: Point;
+  title?: string;                     // 合并后的标题
+  s: Point;                           // 合并起始位置
+  e: Point;                           // 合并结束位置
 }
 
-export type getCellStyleType = (
-  {
-    isTitle,
-    style
-  }: {
-    isTitle: boolean,
-    style?: ISheet['style']
-  }
-) => styleType
+/**
+ * 用户配置的样式接口
+ */
+export interface IStyleConfig {
+  fontSize?: number;                  // 字体大小
+  color?: string;                     // 字体颜色
+  bold?: boolean;                     // 是否加粗
+  background?: string;                // 背景色（优先级低于 backgroundColor）
+  backgroundColor?: string;           // 背景颜色
+  textAlign?: 'left' | 'center' | 'right'; // 文本对齐方式
+  borderColor?: string;               // 边框颜色
+}
 
+/**
+ * 边框的方向
+ */
+export type Side = 'top' | 'bottom' | 'left' | 'right';
 
-export type Side = 'top' | 'bottom' | 'left' | 'right'
-
-export type borderType = Record<
-  Side, 
-  {
-    style: string,
-    color?: {
-      rgb?: string
-    }
-  }
->
-
-export type styleType = {
+/**
+ * 单个单元格样式
+ */
+export type ICellStyle = {
   font?: {
-    sz?: number,
-    color: {
-      rgb?: string
-    },
-    bold?: Boolean
-  },
+    sz?: number;                      // 字体大小
+    color?: {
+      rgb: string;                    // 字体颜色（RGB 格式）
+    }
+    bold?: boolean;                   // 是否加粗
+  }
   alignment: {
-    horizontal?: ICellStyle['textAlign'],
-    wrapText: Boolean
-  },
-  border: borderType,
-  fill?: {
+    horizontal: IStyleConfig['textAlign']; // 水平对齐方式
+    wrapText: boolean;                // 是否自动换行
+  }
+  border: Record<
+    Side,
+    {
+      style: string;                  // 边框样式
+      color?: {
+        rgb?: string;                 // 边框颜色（RGB 格式）
+      }
+    }
+  >;
+  fill: {
     fgColor: {
-      rgb: string
+      rgb?: string;                   // 填充颜色（RGB 格式）
     }
   }
 }

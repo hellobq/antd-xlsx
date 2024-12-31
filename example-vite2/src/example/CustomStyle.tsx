@@ -146,6 +146,9 @@ export default function App() {
             bold: false,
             backgroundColor: 'ff0000',
             textAlign: 'left'
+          },
+          body: {
+            textAlign: 'center'
           }
         }
       }
@@ -153,7 +156,7 @@ export default function App() {
 
     style({
       sheets,
-      filename: 'output.xlsx'
+      filename: 'custom style.xlsx'
     })
   }
 

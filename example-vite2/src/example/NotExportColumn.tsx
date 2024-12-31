@@ -46,7 +46,6 @@ export default function App() {
   const onCountBtnClick = () => {
     const sheets = [
       {
-        name: 'sheet',
         columns: columns,
         dataSource,
       }
@@ -54,7 +53,7 @@ export default function App() {
 
     style({
       sheets,
-      filename: 'basic.xlsx',
+      filename: 'not export column.xlsx',
     })
   }
 

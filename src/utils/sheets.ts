@@ -1,21 +1,22 @@
 import { utils } from 'xlsx'
 import {
+  IExcel,
   ISheet,
-  getCellStyleType,
+  ICellStyle,
   IMerge,
   IColumn,
 } from '../type'
 
 // 获取所有 sheets
-function getSheets(
+export default function getSheets(
   {
     sheets,
-    hiddenHeader: outHiddenHeader,
-    getCellStyle,
+    hiddenHeader: excelHiddenHeader,
+    setCellStyle,
   }: {
     sheets: ISheet[],
-    hiddenHeader?: boolean,
-    getCellStyle?: getCellStyleType
+    hiddenHeader?: IExcel['hiddenHeader'],
+    setCellStyle?: ({ isTitle, style }: { isTitle: boolean, style: ISheet['style'] }) => ICellStyle
   }
 ) {
   return sheets.reduce((map: Record<string, any>, sheet: ISheet, currentIndex: number) => {
@@ -24,7 +25,7 @@ function getSheets(
       columns: originColumns,
       dataSource,
       style,
-      hiddenHeader = outHiddenHeader
+      hiddenHeader = excelHiddenHeader
     } = sheet
 
     const columns = excludeNotExportColumns(originColumns)
@@ -66,11 +67,11 @@ function getSheets(
           v: typeof v === 'string'
             ? v.trim()
             : v,
-          s: typeof getCellStyle === 'function'
-            ? getCellStyle({
-              isTitle,
-              style
-            })
+          s: typeof setCellStyle === 'function'
+            ? setCellStyle({
+                isTitle,
+                style
+              })
             : undefined,
           t: typeof v === 'number' || typeof v === 'string' && v.includes('%')
             ? 'n'
@@ -95,8 +96,6 @@ function getSheets(
     return map
   }, {})
 }
-
-export default getSheets
 
 // 获取所有由叶子节点组成的 columns，也就是树的宽度
 function getAllLeafColumns(columns: IColumn[]): IColumn[] {
@@ -197,7 +196,7 @@ const getDataFromColumnsAndDataSource = (
     rootHeight,
     dataSource
   }: {
-    hiddenHeader?: Boolean,
+    hiddenHeader?: boolean,
     columns: IColumn[],
     leafColumns: IColumn[],
     rootHeight: number,
@@ -323,7 +322,7 @@ function getBodyMerges({
   leafColumns,
   dataSource
 }: {
-  hiddenHeader?: Boolean,
+  hiddenHeader?: boolean,
   rootHeight: number,
   leafColumns: IColumn[],
   dataSource: Record<string, any>[]

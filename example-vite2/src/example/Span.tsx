@@ -162,7 +162,6 @@ export default function App() {
   const onCountBtnClick = () => {
     const sheets = [
       {
-        name: '普通表格',
         columns: columns,
         dataSource,
       }
@@ -170,7 +169,7 @@ export default function App() {
 
     style({
       sheets,
-      filename: 'output.xlsx'
+      filename: '单元格合并.xlsx'
     })
   }
 
